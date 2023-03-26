@@ -7,9 +7,5 @@ class Department {
 }
 
 const accounting = new Department('bloxxom');
-const accounting2 = new Department('hello');
-
-
 
 console.log(accounting);
-console.log(accounting2)
