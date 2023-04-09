@@ -1,16 +1,24 @@
-class Department {
-    private readonly id: string;
-    readonly name: string;
+abstract class Department {
+    protected id: string;
+    private name: string;
     protected employees: string[] = [];
+
+    static fiscalYear = 2002;
 
     constructor(n: string, id: string) {
         this.name = n;
         this.id = id;
     }
 
-    describe(this: Department) {
-        console.log('describe :', this.name, this.id);
+    set changeName(name: string) {
+        this.name = name;
     }
+
+    static createEmployee(name: string) {
+        return {name};
+    }
+
+    abstract describe(this: Department): void;
 
     addEmploy(this: Department, employee: string) {
         this.employees.push(employee);
@@ -27,10 +35,15 @@ class ITpart extends Department {
         super('blossom', id);
         this.admin = admin;
     }
+
+    describe(): void {
+        console.log('is it part describe :', this.id)
+    }
 }
 
 class AccountingPart extends Department {
     private lastReport: string;
+    private static instance: AccountingPart;
     reports: string[] = [];
 
     get mostRecentReport() {
@@ -47,9 +60,21 @@ class AccountingPart extends Department {
         this.addReports(report);
     }
 
-    constructor(id: string) {
+    private constructor(id: string) {
         super('x_x', id);
         this.lastReport = this.reports[this.reports.length - 1];
+    }
+
+    static getInstance() {
+        if(this.instance) {
+            return this.instance;
+        }
+        this.instance = new AccountingPart('accounted');
+        return this.instance;
+    }
+
+    describe(): void {
+        console.log('is account part describe :', this.id);
     }
 
     addEmploy(name: string) {
@@ -65,13 +90,16 @@ class AccountingPart extends Department {
     }
 }
 
+const employ01 = Department.createEmployee('new part');
 const it = new ITpart('itttt', ['bloxxom', 'flower']);
-const account = new AccountingPart('account');
-const basic = new Department('basic', 'Department');
-basic.addEmploy('hello');
-account.setRecentReport = 'change value';
-account.addReports('hello!');
-account.printEmployee();
-it.describe();
+const accounting = AccountingPart.getInstance();
+const accounting2 = AccountingPart.getInstance();
+accounting.addReports('hello');
+accounting2.addEmploy('world');
 
-console.log(account.mostRecentReport);
+console.log(it);
+
+
+console.log(accounting);
+console.log(accounting2)
+it.describe();
