@@ -1,7 +1,7 @@
 class Department {
     private readonly id: string;
     readonly name: string;
-    private employees: string[] = [];
+    protected employees: string[] = [];
 
     constructor(n: string, id: string) {
         this.name = n;
@@ -30,27 +30,48 @@ class ITpart extends Department {
 }
 
 class AccountingPart extends Department {
+    private lastReport: string;
     reports: string[] = [];
+
+    get mostRecentReport() {
+        if(this.lastReport) {
+            return this.lastReport
+        }
+        throw new Error('empty report');
+    }
+
+    set setRecentReport(report: string) {
+        if(!report) {
+            throw new Error('require input report value');
+        }
+        this.addReports(report);
+    }
+
     constructor(id: string) {
         super('x_x', id);
+        this.lastReport = this.reports[this.reports.length - 1];
+    }
 
+    addEmploy(name: string) {
+        if(name === 'Max') {
+            return;
+        }
+        this.employees.push(name);
     }
 
     addReports(report: string) {
         this.reports.push(report);
+        this.lastReport = report;
     }
 }
 
 const it = new ITpart('itttt', ['bloxxom', 'flower']);
 const account = new AccountingPart('account');
-
-account.addReports('monthReport');
-account.addReports('yearReport');
-
-it.addEmploy('flower');
-
-it.printEmployee();
+const basic = new Department('basic', 'Department');
+basic.addEmploy('hello');
+account.setRecentReport = 'change value';
+account.addReports('hello!');
+account.printEmployee();
 it.describe();
 
-console.log(it);
-console.log(account)
+console.log(account.mostRecentReport);
